@@ -1,17 +1,17 @@
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
+from typing import Dict
 
 import numpy as np
 import optuna
-from stable_baselines3.common.noise import (
-    NormalActionNoise,
-    OrnsteinUhlenbeckActionNoise,
-)
+from stable_baselines3.common.noise import NormalActionNoise
+from stable_baselines3.common.noise import OrnsteinUhlenbeckActionNoise
 from torch import nn as nn
-
 from utils import linear_schedule
 
 
-def sample_ppo_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for PPO hyperparams.
 
@@ -92,7 +92,7 @@ def sample_ppo_params(trial: optuna.Trial) -> Dict[str, Any]:
     }
 
 
-def sample_trpo_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_trpo_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for TRPO hyperparams.
 
@@ -175,7 +175,7 @@ def sample_trpo_params(trial: optuna.Trial) -> Dict[str, Any]:
     }
 
 
-def sample_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_a2c_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for A2C hyperparams.
 
@@ -254,7 +254,7 @@ def sample_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     }
 
 
-def sample_sac_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for SAC hyperparams.
 
@@ -325,7 +325,7 @@ def sample_sac_params(trial: optuna.Trial) -> Dict[str, Any]:
     return hyperparams
 
 
-def sample_td3_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_td3_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for TD3 hyperparams.
 
@@ -393,7 +393,7 @@ def sample_td3_params(trial: optuna.Trial) -> Dict[str, Any]:
     return hyperparams
 
 
-def sample_ddpg_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_ddpg_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for DDPG hyperparams.
 
@@ -455,7 +455,7 @@ def sample_ddpg_params(trial: optuna.Trial) -> Dict[str, Any]:
     return hyperparams
 
 
-def sample_dqn_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_dqn_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for DQN hyperparams.
 
@@ -510,8 +510,8 @@ def sample_dqn_params(trial: optuna.Trial) -> Dict[str, Any]:
 
 
 def sample_her_params(
-    trial: optuna.Trial, hyperparams: Dict[str, Any]
-) -> Dict[str, Any]:
+    trial: optuna.Trial, hyperparams: dict[str, Any]
+) -> dict[str, Any]:
     """
     Sampler for HerReplayBuffer hyperparams.
 
@@ -531,7 +531,7 @@ def sample_her_params(
     return hyperparams
 
 
-def sample_tqc_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for TQC hyperparams.
 
@@ -552,7 +552,68 @@ def sample_tqc_params(trial: optuna.Trial) -> Dict[str, Any]:
     return hyperparams
 
 
-def sample_qrdqn_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_crossq_params(trial: optuna.Trial) -> dict[str, Any]:
+    """
+    Sampler for CrossQ hyperparams.
+
+    :param trial:
+    :return:
+    """
+    # CrossQ is SAC without target networks (Batch Normalization takes
+    # their place), plus a TD3-style delayed policy update -- so this
+    # mirrors sample_sac_params minus `tau` (no target network to
+    # Polyak-average) and adds `policy_delay`.
+    gamma = trial.suggest_categorical(
+        "gamma", [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999]
+    )
+    learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1)
+    batch_size = trial.suggest_categorical(
+        "batch_size", [16, 32, 64, 128, 256, 512, 1024, 2048]
+    )
+    buffer_size = trial.suggest_categorical(
+        "buffer_size", [int(1e4), int(1e5), int(1e6)]
+    )
+    learning_starts = trial.suggest_categorical(
+        "learning_starts", [0, 1000, 10000, 20000]
+    )
+    train_freq = trial.suggest_categorical(
+        "train_freq", [1, 4, 8, 16, 32, 64, 128, 256, 512]
+    )
+    gradient_steps = train_freq
+    ent_coef = "auto"
+    policy_delay = trial.suggest_categorical("policy_delay", [1, 2, 3])
+    log_std_init = trial.suggest_uniform("log_std_init", -4, 1)
+    net_arch = trial.suggest_categorical("net_arch", ["small", "medium", "big"])
+
+    net_arch = {
+        "small": [64, 64],
+        "medium": [256, 256],
+        "big": [400, 300],
+    }[net_arch]
+
+    target_entropy = "auto"
+
+    hyperparams = {
+        "gamma": gamma,
+        "learning_rate": learning_rate,
+        "batch_size": batch_size,
+        "buffer_size": buffer_size,
+        "learning_starts": learning_starts,
+        "train_freq": train_freq,
+        "gradient_steps": gradient_steps,
+        "ent_coef": ent_coef,
+        "policy_delay": policy_delay,
+        "target_entropy": target_entropy,
+        "policy_kwargs": dict(log_std_init=log_std_init, net_arch=net_arch),
+    }
+
+    if trial.using_her_replay_buffer:
+        hyperparams = sample_her_params(trial, hyperparams)
+
+    return hyperparams
+
+
+def sample_qrdqn_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for QR-DQN hyperparams.
 
@@ -568,7 +629,7 @@ def sample_qrdqn_params(trial: optuna.Trial) -> Dict[str, Any]:
     return hyperparams
 
 
-def sample_ars_params(trial: optuna.Trial) -> Dict[str, Any]:
+def sample_ars_params(trial: optuna.Trial) -> dict[str, Any]:
     """
     Sampler for ARS hyperparams.
     :param trial:
@@ -614,6 +675,7 @@ def sample_ars_params(trial: optuna.Trial) -> Dict[str, Any]:
 HYPERPARAMS_SAMPLER = {
     "a2c": sample_a2c_params,
     "ars": sample_ars_params,
+    "crossq": sample_crossq_params,
     "ddpg": sample_ddpg_params,
     "dqn": sample_dqn_params,
     "qrdqn": sample_qrdqn_params,

@@ -1,20 +1,20 @@
-
-
 # directory
+from __future__ import annotations
+
 DATA_SAVE_DIR = "datasets"
 TRAINED_MODEL_DIR = "trained_models"
 TENSORBOARD_LOG_DIR = "tensorboard_log"
 RESULTS_DIR = "results"
 
 # date format: '%Y-%m-%d'
-TRAIN_START_DATE = "2014-01-01"
-TRAIN_END_DATE = "2020-07-31"
+TRAIN_START_DATE = "2014-01-06"
+TRAIN_END_DATE = "2025-12-31"
 
-TEST_START_DATE = "2020-08-01"
-TEST_END_DATE = "2021-10-01"
+TEST_START_DATE = "2026-01-01"
+TEST_END_DATE = "2026-03-20"
 
-TRADE_START_DATE = "2021-11-01"
-TRADE_END_DATE = "2021-12-01"
+TRADE_START_DATE = "2026-01-01"
+TRADE_END_DATE = "2026-03-20"
 
 # stockstats technical indicator column names
 # check https://pypi.org/project/stockstats/ for different names
@@ -47,6 +47,29 @@ SAC_PARAMS = {
     "learning_starts": 100,
     "ent_coef": "auto_0.1",
 }
+# TQC (Kuznetsov et al., 2020, "Controlling Overestimation Bias with
+# Truncated Mixture of Continuous Distributional Quantile Critics", ICML) is
+# SAC with a distributional, quantile-truncated critic, so its defaults
+# mirror SAC_PARAMS plus its own knob (sb3-contrib's own default of 2).
+TQC_PARAMS = {
+    "batch_size": 64,
+    "buffer_size": 100000,
+    "learning_rate": 0.0001,
+    "learning_starts": 100,
+    "ent_coef": "auto_0.1",
+    "top_quantiles_to_drop_per_net": 2,
+}
+# CrossQ (Bhatt et al., 2024, "CrossQ: Batch Normalization in Deep
+# Reinforcement Learning for Greater Sample Efficiency and Simplicity",
+# ICLR) removes the target networks SAC relies on, so its defaults follow
+# sb3-contrib's own rather than SAC_PARAMS's.
+CROSSQ_PARAMS = {
+    "batch_size": 256,
+    "buffer_size": 1000000,
+    "learning_rate": 0.001,
+    "learning_starts": 100,
+    "ent_coef": "auto",
+}
 ERL_PARAMS = {
     "learning_rate": 3e-5,
     "batch_size": 2048,
@@ -54,26 +77,23 @@ ERL_PARAMS = {
     "seed": 312,
     "net_dimension": 512,
     "target_step": 5000,
-    "eval_gap": 30
+    "eval_gap": 30,
+    "eval_times": 64,  # bug fix:KeyError: 'eval_times' line 68, in get_model model.eval_times = model_kwargs["eval_times"]
 }
 RLlib_PARAMS = {"lr": 5e-5, "train_batch_size": 500, "gamma": 0.99}
 
 
 # Possible time zones
-TIME_ZONE_SHANGHAI = 'Asia/Shanghai'  # Hang Seng HSI, SSE, CSI
-TIME_ZONE_USEASTERN = 'US/Eastern'  # Dow, Nasdaq, SP
-TIME_ZONE_PARIS = 'Europe/Paris'  # CAC,
-TIME_ZONE_BERLIN = 'Europe/Berlin'  # DAX, TECDAX, MDAX, SDAX
-TIME_ZONE_JAKARTA = 'Asia/Jakarta'  # LQ45
-TIME_ZONE_SELFDEFINED = 'xxx'  # If neither of the above is your time zone, you should define it, and set USE_TIME_ZONE_SELFDEFINED 1.
+TIME_ZONE_SHANGHAI = "Asia/Shanghai"  # Hang Seng HSI, SSE, CSI
+TIME_ZONE_USEASTERN = "US/Eastern"  # Dow, Nasdaq, SP
+TIME_ZONE_PARIS = "Europe/Paris"  # CAC,
+TIME_ZONE_BERLIN = "Europe/Berlin"  # DAX, TECDAX, MDAX, SDAX
+TIME_ZONE_JAKARTA = "Asia/Jakarta"  # LQ45
+TIME_ZONE_SELFDEFINED = "xxx"  # If neither of the above is your time zone, you should define it, and set USE_TIME_ZONE_SELFDEFINED 1.
 USE_TIME_ZONE_SELFDEFINED = 0  # 0 (default) or 1 (use the self defined)
 
 # parameters for data sources
 ALPACA_API_KEY = "xxx"  # your ALPACA_API_KEY
 ALPACA_API_SECRET = "xxx"  # your ALPACA_API_SECRET
-ALPACA_API_BASE_URL = 'https://paper-api.alpaca.markets'  # alpaca url
-BINANCE_BASE_URL = 'https://data.binance.vision/'  # binance url
-
-
-
-
+ALPACA_API_BASE_URL = "https://paper-api.alpaca.markets"  # alpaca url
+BINANCE_BASE_URL = "https://data.binance.vision/"  # binance url

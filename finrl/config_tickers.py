@@ -1,11 +1,13 @@
+from __future__ import annotations
 
 SINGLE_TICKER = ["AAPL"]
 
-# Dow 30 constituents in 2021/10
-# check https://wrds-www.wharton.upenn.edu/ for U.S. index constituents
+# Dow 30 constituents in 2026/03/20
+# check https://wrds-www.wharton.upenn.edu/ or https://www.cnbc.com/dow-30/ for U.S. index constituents
 DOW_30_TICKER = [
     "AXP",
     "AMGN",
+    "AMZN",
     "AAPL",
     "BA",
     "CAT",
@@ -15,7 +17,6 @@ DOW_30_TICKER = [
     "HD",
     "HON",
     "IBM",
-    "INTC",
     "JNJ",
     "KO",
     "JPM",
@@ -23,6 +24,7 @@ DOW_30_TICKER = [
     "MMM",
     "MRK",
     "MSFT",
+    "NVDA",
     "NKE",
     "PG",
     "TRV",
@@ -30,13 +32,13 @@ DOW_30_TICKER = [
     "CRM",
     "VZ",
     "V",
-    "WBA",
     "WMT",
     "DIS",
-    "DOW"
+    "SHW",
 ]
 
-# Nasdaq 100 constituents at 2019/01
+# Nasdaq 100 constituents at 2026/03/20
+# check https://www.cnbc.com/nasdaq-100/
 NAS_100_TICKER = [
     "AMGN",
     "AAPL",
@@ -47,19 +49,12 @@ NAS_100_TICKER = [
     "MSFT",
     "ADBE",
     "CSCO",
-    "XLNX",
     "QCOM",
     "COST",
     "SBUX",
-    "FISV",
-    "CTXS",
     "INTU",
     "AMZN",
-    "EBAY",
-    "BIIB",
-    "CHKP",
     "GILD",
-    "NLOK",
     "CMCSA",
     "FAST",
     "ADSK",
@@ -68,62 +63,35 @@ NAS_100_TICKER = [
     "GOOGL",
     "ISRG",
     "VRTX",
-    "HSIC",
-    "BIDU",
-    "ATVI",
     "ADP",
     "ROST",
     "ORLY",
-    "CERN",
     "BKNG",
-    "MYL",
     "MU",
-    "DLTR",
-    "ALXN",
-    "SIRI",
     "MNST",
     "AVGO",
     "TXN",
     "MDLZ",
-    "FB",
+    "META",
     "ADI",
     "WDC",
     "REGN",
-    "LBTYK",
     "VRSK",
     "NFLX",
     "TSLA",
     "CHTR",
     "MAR",
-    "ILMN",
     "LRCX",
     "EA",
-    "AAL",
-    "WBA",
     "KHC",
-    "BMRN",
-    "JD",
-    "SWKS",
-    "INCY",
     "PYPL",
-    "CDW",
-    "FOXA",
-    "MXIM",
     "TMUS",
-    "EXPE",
-    "TCOM",
-    "ULTA",
     "CSX",
-    "NTES",
     "MCHP",
     "CTAS",
     "KLAC",
-    "HAS",
-    "JBHT",
     "IDXX",
-    "WYNN",
     "MELI",
-    "ALGN",
     "CDNS",
     "WDAY",
     "SNPS",
@@ -133,11 +101,46 @@ NAS_100_TICKER = [
     "NXPI",
     "XEL",
     "AMD",
-    "NTAP",
-    "VRSN",
-    "LULU",
-    "WLTW",
-    "UAL",
+    "ABNB",
+    "AEP",
+    "ALNY",
+    "APP",
+    "ARM",
+    "AXON",
+    "BKR",
+    "CCEP",
+    "CEG",
+    "CPRT",
+    "CRWD",
+    "CSGP",
+    "DASH",
+    "DDOG",
+    "DXCM",
+    "EXC",
+    "FANG",
+    "FER",
+    "FTNT",
+    "GEHC",
+    "GOOG",
+    "HON",
+    "INSM",
+    "KDP",
+    "LIN",
+    "MPWR",
+    "MRVL",
+    "MSTR",
+    "ODFL",
+    "PANW",
+    "PDD",
+    "PLTR",
+    "ROP",
+    "SHOP",
+    "STX",
+    "TEAM",
+    "TRI",
+    "WBD",
+    "WMT",
+    "ZS",
 ]
 
 # SP 500 constituents at 2019
@@ -1430,3 +1433,48 @@ FX_TICKER = [
     "EURDKK=X",
 ]
 
+# Taiwan
+TAI_0050_TICKER = [
+    "3008",  # Largan Precision Co., Ltd.
+    "1303",  # Nan Ya Plastics Corporation
+    "2412",  # Chunghwa Telecom Co., Ltd.
+    "1301",  # Formosa Plastics Corporation
+    "1216",  # Uni-President Enterprises Corporation
+    "2881",  # Fubon Financial Holding Co., Ltd.
+    "2882",  # Cathay Financial Holding Co., Ltd.
+    "5871",  # China Development Financial Holding Corporation
+    "2886",  # Mega Financial Holding Co., Ltd.
+    "2891",  # CTBC Financial Holding Co., Ltd.
+    "2884",  # E.SUN Financial Holding Co., Ltd.
+    "5880",  # Yuanta Financial Holding Co., Ltd.
+    "2883",  # China Development Financial Holding Corporation
+    "2892",  # First Financial Holding Co., Ltd.
+    "2880",  # SinoPac Financial Holdings Company Limited
+    "2303",  # United Microelectronics Corporation
+    "1326",  # Formosa Chemicals & Fibre Corporation
+    "1101",  # Taiwan Cement Corp.
+    "3006",  # Advanced Semiconductor Engineering, Inc.
+    "3045",  # Compal Electronics Inc.
+    "2912",  # President Chain Store Corporation
+    "2327",  # ASE Technology Holding Co., Ltd.
+    "1304",  # China Petrochemical Development Corporation
+    "2379",  # Realtek Semiconductor Corp.
+    "2801",  # Chang Hwa Commercial Bank, Ltd.
+    "1402",  # Far Eastern New Century Corporation
+    "2345",  # Acer Incorporated
+    "2301",  # Lite-On Technology Corporation
+    "2408",  # AU Optronics Corp.
+    "2357",  # Asustek Computer Inc.
+    "9910",  # Feng Hsin Iron & Steel Co., Ltd.
+    "2395",  # Advantech Co., Ltd.
+    "2353",  # Acer Incorporated
+    "2354",  # Micro-Star International Co., Ltd.
+    "3711",  # ASE Technology Holding Co., Ltd.
+    "2890",  # Taishin Financial Holding Co., Ltd.
+    "2377",  # Micro-Star International Co., Ltd.
+    "4904",  # Far EasTone Telecommunications Co., Ltd.
+    "2324",  # Compal Electronics, Inc.
+    "2305",  # First International Computer, Inc.
+    "1102",  # Asia Cement Corporation
+    "9933",  # Mega Financial Holding Co., Ltd.
+]
